@@ -170,10 +170,5 @@ function plotData(data, setterFunction, chosenCategory) {
 <div class="card">${plotData(data, setCategory, category)}</div>
 ```
 
-To make seeing the result easier, here I duplicate the view of the drop-down menu:
 
-```js echo
-view(categoryInput)
-```
-
-You can see that clicking on a circle in the plot sets the value of the drop-down object, and vice-versa.
+You can now see that clicking on a circle in the plot sets the value of the drop-down object, and vice-versa.
