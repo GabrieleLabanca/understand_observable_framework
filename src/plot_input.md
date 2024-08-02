@@ -25,7 +25,7 @@ This setter function is what we will pass as a callback to the `onClick` event i
 
 Observable provides handy input objects. Let's pick one which is less obvious than the button in the documentation, a drop-down selection:
 
-```js echoFor ease
+```js echo
 const categoryInput = Inputs.select(["first", "second", "third"], {
   label: "Category",
 });
