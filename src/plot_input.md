@@ -1,14 +1,16 @@
+# Input from a plot
+
 Goal: a dashboard that has "bidirectional" click interaction, meaning that drop-down menus caninfluence plots and viceversa.
 
 The page https://observablehq.com/framework/reactivity#inputs gives valuable insights. The Observable Plot library is not enough, as pointed out here https://talk.observablehq.com/t/observable-plot-click-events/8633/5, so the lower-level library D3 is needed.
 
 As an example, suppose that we want to display data divided in categories.
 
-# Input objects
+## Input objects
 
 Observable built-in `Input` objects are great for simple interaction, i.e. the one that uses them just as inputs; but what if we want to be able to change the value both from an input object and from somewhere else (in our case, a plot)?
 
-## the Mutable
+### the Mutable
 
 Everything revolves around the `Mutable` concept: an object that is watched at by other components that depend on it (automagically! Thanks to Observable framework). You can define one as follows:
 
@@ -21,7 +23,7 @@ This code creates an object that stores the value of the category, assigning "fi
 
 This setter function is what we will pass as a callback to the `onClick` event in the plot.
 
-## the input
+### the input
 
 Observable provides handy input objects. Let's pick one which is less obvious than the button in the documentation, a drop-down selection:
 
@@ -42,7 +44,7 @@ We also need a setter, which this time should be in _another_ cell; note that we
 const setCategoryInput = (x) => (categoryInput.value = x);
 ```
 
-## connect them
+### connect them
 
 This is simple: in two separate cells, just call the setter functions with the value of the other component.
 
@@ -78,7 +80,7 @@ view(
 👀 Note that after pushing the button the value of `categoryInput` changes, but `categoryInputValue` _doesn't_! I'm not completely sure if this can be fixed, but it's not a big deal since the latter is only used in the `setCategory` function, which we need to call only when selecting from the drop-down... but pay attention, don't use it elsewhere!
 
 
-# Plot
+## Plot
 
 Let's create some sample data:
 
@@ -86,7 +88,7 @@ Let's create some sample data:
 const data = [];
 const categories = ["first", "second", "third"];
 
-for (let i = 0; i < 10; i++) {
+for (let i = 0; i < 20; i++) {
   const x = Math.random();
   const y = Math.random();
   const category = categories[Math.floor(Math.random() * categories.length)];
@@ -102,26 +104,26 @@ Apart of the usual scatter plot code, these are the important bits:
 - in order to **pass information from the plot to the page**, an event handler is added for "click" events, which calls the setter function.
 
 ```js echo
-function plotData(data, setterFunction, chosenCategory) {
+function plotData(widthContainer, data, setterFunction, chosenCategory) {
   // setup the plot
-  const margin = { top: 0, right: 0, bottom: 20, left: 20 };
-  const width = 600 - margin.left - margin.right;
-  const height = 400 - margin.top - margin.bottom;
+  const margin = { top: 10, right: 0, bottom: 10, left: 20 };
+  const width = widthContainer //- margin.left - margin.right;
+  const height = 400// - margin.top - margin.bottom;
   const color = d3.scaleOrdinal(d3.schemeObservable10);
 
   const svg = d3
     .create("svg")
     .attr("width", width + margin.left + margin.right)
-    .attr("height", height + margin.top + margin.bottom);
+    .attr("height", height + margin.top + margin.bottom)
 
-  const xScale = d3.scaleLinear().domain([0, 1]).range([0, width]);
-  const yScale = d3.scaleLinear().domain([0, 1]).range([height, 0]);
+  const xScale = d3.scaleLinear().domain([0, 1]).range([0, width - margin.left - margin.right]);
+  const yScale = d3.scaleLinear().domain([0, 1]).range([height- margin.top - margin.bottom, 0]);
 
   const xAxis = d3.axisBottom(xScale);
   const yAxis = d3.axisLeft(yScale);
 
-  svg.append("g").attr("transform", `translate(0,${height})`).call(xAxis);
-  svg.append("g").call(yAxis);
+  svg.append("g").attr("transform", `translate(30,${height-10})`).call(xAxis);
+  svg.append("g").attr("transform", `translate(30,10)`).call(yAxis);
 
 
   svg
@@ -139,7 +141,7 @@ function plotData(data, setterFunction, chosenCategory) {
     });
 
   const categories = ["first", "second", "third"];
-  const legend = svg.append("g").attr("class", "legend");
+  const legend = svg.append("g").attr("class", "legend").attr('transform', 'translate(50,10)');
 
   legend
     .selectAll("rect")
@@ -167,7 +169,7 @@ function plotData(data, setterFunction, chosenCategory) {
 ```
 
 ```html echo
-<div class="card">${plotData(data, setCategory, category)}</div>
+<div class="card">${resize((width)=>plotData(width, data, setCategory, category))}</div>
 ```
 
 
