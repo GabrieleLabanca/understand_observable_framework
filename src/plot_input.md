@@ -32,7 +32,7 @@ const categoryInput = Inputs.select(["first", "second", "third"], {
 ```
 
 ```js echo
-const categoryInputValue = view(categoryInput);
+const categoryInputValue = view(categoryInput)
 ```
 
 Here `view` both makes the input visible and usable, and allow assigning the value to be used later.
@@ -172,8 +172,8 @@ function plotData(data, setterFunction, chosenCategory) {
 
 To make seeing the result easier, here I duplicate the view of the drop-down menu:
 
-```js
-view(categoryInput);
+```js echo
+view(categoryInput)
 ```
 
 You can see that clicking on a circle in the plot sets the value of the drop-down object, and vice-versa.
