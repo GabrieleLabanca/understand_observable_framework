@@ -29,6 +29,9 @@ Observable provides handy input objects. Let's pick one which is less obvious th
 const categoryInput = Inputs.select(["first", "second", "third"], {
   label: "Category",
 });
+```
+
+```js echo
 const categoryInputValue = view(categoryInput);
 ```
 
@@ -44,18 +47,23 @@ const setCategoryInput = (x) => (categoryInput.value = x);
 This is simple: in two separate cells, just call the setter functions with the value of the other component.
 
 ```js echo
-display(setCategory(categoryInputValue));
+setCategory(categoryInputValue);
 ```
+
 
 and
 
 ```js echo
-display(setCategoryInput(category));
+setCategoryInput(category);
 ```
 
-Let's check that this works: if you select from the drop-down, you can see the values changing; if instead you change the value setting the mutable, say with a button, the drop-down gets updated ✅
+Now we get the following:
+>`category`: ${category}
 
-👀 Note that after pushing the button the value of `categoryInput` changes, but `categoryInputValue` _doesn't_! I'm not completely sure if this can be fixed, but it's not a big deal since the latter is only used in the `setCategory` function, which we need to call only when selecting from the drop-down... but pay attention, don't use it elsewhere!
+>`categoryInputValue`: ${categoryInputValue}
+
+
+Let's check that this works: if you select from the drop-down, you can see the values changing; if instead you change the value setting the mutable, say with a button, the drop-down gets updated ✅
 
 ```js echo
 view(
@@ -65,6 +73,10 @@ view(
   ])
 );
 ```
+
+
+👀 Note that after pushing the button the value of `categoryInput` changes, but `categoryInputValue` _doesn't_! I'm not completely sure if this can be fixed, but it's not a big deal since the latter is only used in the `setCategory` function, which we need to call only when selecting from the drop-down... but pay attention, don't use it elsewhere!
+
 
 # Plot
 
